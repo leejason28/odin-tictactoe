@@ -6,6 +6,7 @@ class Game
     @board = Board.new
     @x = Player.new('x')
     @o = Player.new('o')
+    @current = @x
   end
 
   def update_board(move)
@@ -69,6 +70,37 @@ class Game
     return false
   end
 
+  def valid_move? (row, col)
+    if @board.array[row][col] == " "
+      return true
+    end
+    return false
+  end
+
+  def play
+    p @board.array
+    p "Hello. Welcome to Tic-Tac-Toe."
+    p "Enter your moves in the format: row# column#."
+    while !self.game_over?
+      p "Player #{@current.id}, what is your move?"
+      user_response = gets
+      user_rc = user_response.split
+      user_rc.map! { |num| num.to_i}
+      if valid_move?(user_rc[0], user_rc[1])
+        user_move = Move.new(@current, user_rc[0], user_rc[1])
+        update_board(user_move)
+        if @current.id == 'x'
+          @current = @o
+        else
+          @current = @x
+        end
+        p @board.array  
+      else
+        p "Please enter a valid move. Valid moves contain row and column numbers in between 1 and 3 inclusive."
+      end
+    end
+  end
+
 end
 
 class Board
@@ -86,7 +118,7 @@ class Player
   attr_reader :id
 
   def initialize(id)
-    if (id != 'x' && id != 'o')
+    if id != 'x' && id != 'o'
       return "Enter a valid player id."
     end
     @id = id
@@ -99,9 +131,15 @@ class Move
   attr_accessor :player, :row, :column
 
   def initialize(player, row, column)
-    @player = player
-    @row = row-1
-    @column = column-1
+    if row<1 || row>3
+      return "Enter a valid row number"
+    elsif column<1 || column>3
+      return "Enter a valid column number"
+    else
+      @player = player
+      @row = row-1
+      @column = column-1
+    end
   end
 
 end
@@ -116,5 +154,8 @@ g.update_board(m1)
 g.update_board(m2)
 g.update_board(m3)
 g.update_board(m4)
-p g.board.array
-p g.game_over?
+#p g.board.array
+#p g.game_over?
+
+g2 = Game.new()
+g2.play
