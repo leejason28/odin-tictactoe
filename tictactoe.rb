@@ -123,8 +123,7 @@ class Game
         else
           @current = @x
         end
-        p @board.array  
-        p " "
+        p @board.array
       else
         p "Please enter a valid move. Valid moves contain empty spaces where row and column numbers are in between 1 and 3 inclusive."
       end
