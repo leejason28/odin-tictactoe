@@ -71,8 +71,14 @@ class Game
   end
 
   def valid_move? (row, col)
-    if @board.array[row][col] == " "
-      return true
+    if row<1 || row>3
+      return false
+    elsif col<1 || col>3
+      return false
+    else
+      if @board.array[row-1][col-1] == " "
+        return true
+      end
     end
     return false
   end
@@ -84,8 +90,9 @@ class Game
     while !self.game_over?
       p "Player #{@current.id}, what is your move?"
       user_response = gets
-      user_rc = user_response.split
+      user_rc = user_response.chomp.split
       user_rc.map! { |num| num.to_i}
+      p user_rc
       if valid_move?(user_rc[0], user_rc[1])
         user_move = Move.new(@current, user_rc[0], user_rc[1])
         update_board(user_move)
@@ -95,8 +102,9 @@ class Game
           @current = @x
         end
         p @board.array  
+        p " "
       else
-        p "Please enter a valid move. Valid moves contain row and column numbers in between 1 and 3 inclusive."
+        p "Please enter a valid move. Valid moves contain empty spaces where row and column numbers are in between 1 and 3 inclusive."
       end
     end
   end
