@@ -7,6 +7,7 @@ class Game
     @x = Player.new('x')
     @o = Player.new('o')
     @current = @x
+    @winner = 'none'
   end
 
   def update_board(move)
@@ -16,14 +17,18 @@ class Game
   def game_over?
     if check_rows || check_cols || check_cross
       return true
+    elsif self.is_full?
+      return true
+    else
+      return false
     end
-    return false
   end
 
   def check_rows
     @board.array.each do |row|
       if row[0]==row[1] && row[1]==row[2]
         if row[0]=='x' || row[0]=='o'
+          @winner = row[0]
           return true
         end
       end
@@ -34,14 +39,17 @@ class Game
   def check_cols
     if @board.array[0][0] == @board.array[1][0] && @board.array[1][0] == @board.array[2][0]
       if is_player?(@board.array[0][0])
+        @winner = @board.array[0][0]
         return true
       end
     elsif @board.array[0][1] == @board.array[1][1] && @board.array[1][1] == @board.array[2][1]
       if is_player?(@board.array[0][1])
+        @winner = @board.array[0][1]
         return true
       end
     elsif @board.array[0][2] == @board.array[1][2] && @board.array[1][2] == @board.array[2][2]
       if is_player?(@board.array[0][2])
+        @winner = @board.array[0][2]
         return true
       end
     else
@@ -52,15 +60,29 @@ class Game
   def check_cross
     if @board.array[0][0] == @board.array[1][1] && @board.array[1][1] == @board.array[2][2]
       if is_player?(@board.array[0][0])
+        @winner = @board.array[0][0]
         return true
       end
     elsif @board.array[0][2] == @board.array[1][1] && @board.array[1][1] == @board.array[2][0]
       if is_player?(@board.array[0][2])
+        @winner = @board.array[0][2]
         return true
       end
     else
       return false
     end 
+  end
+
+  def is_full?
+    empty = 0
+    for i in 0..2
+      for j in 0..2
+        if @board.array[i][j] == " "
+          empty += 1
+        end
+      end
+    end
+    return empty == 0
   end
 
   def is_player? (pos)
@@ -107,6 +129,11 @@ class Game
         p "Please enter a valid move. Valid moves contain empty spaces where row and column numbers are in between 1 and 3 inclusive."
       end
     end
+    if @winner == 'none'
+      p "Tie game!"
+    else
+      p "Player #{@winner} wins!"
+    end
   end
 
 end
@@ -152,18 +179,5 @@ class Move
 
 end
 
-
 g = Game.new()
-m1 = Move.new(g.x,2,2)
-m2 = Move.new(g.x,1,1)
-m3 = Move.new(g.x,3,3)
-m4 = Move.new(g.o,3,1)
-g.update_board(m1)
-g.update_board(m2)
-g.update_board(m3)
-g.update_board(m4)
-#p g.board.array
-#p g.game_over?
-
-g2 = Game.new()
-g2.play
+g.play
