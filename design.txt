@@ -1,0 +1,14 @@
+class Game 
+    initialization will create a new game board and new players 'X' and 'O'
+    since this represents an instance of a game, the class should have all the logic for how the game is played:
+        #game_over? will check after every player move if the game is over
+        #update_board will update the board to reflect the passed-in move
+
+class Board
+    initialization will create an empty nested 3x3 array
+
+class Player
+    initialization will create a 'player' that is either 'X' or 'O'
+
+class move
+    initialization will requre a (player, row, column)
